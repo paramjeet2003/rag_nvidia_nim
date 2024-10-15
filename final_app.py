@@ -29,7 +29,7 @@ def vector_embeddings(uploaded_files):
         st.session_state.final_documents=st.session_state.text_splitter.split_documents(st.session_state.docs[:30])
         st.session_state.vectors=FAISS.from_documents(st.session_state.final_documents, st.session_state.embeddings)
         
-
+st.set_page_config(page_title="NVIDIA NIM RAG", page_icon="🦜")
 st.title("Nvidia NIM Inferencing")
 
 prompt = ChatPromptTemplate.from_template(
