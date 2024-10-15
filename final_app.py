@@ -9,6 +9,7 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain.chains import create_retrieval_chain
 from langchain_community.vectorstores import FAISS
 import time
+st.set_page_config(page_title="NVIDIA NIM RAG", page_icon="🦜")
 ## load the nvidia api key
 api_key = st.sidebar.text_input("Enter your NVIDIA API Key", type="password")
 os.environ["NVIDIA_API_KEY"] = api_key
@@ -29,7 +30,7 @@ def vector_embeddings(uploaded_files):
         st.session_state.final_documents=st.session_state.text_splitter.split_documents(st.session_state.docs[:30])
         st.session_state.vectors=FAISS.from_documents(st.session_state.final_documents, st.session_state.embeddings)
         
-st.set_page_config(page_title="NVIDIA NIM RAG", page_icon="🦜")
+
 st.title("Nvidia NIM Inferencing")
 
 prompt = ChatPromptTemplate.from_template(
