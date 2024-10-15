@@ -1,7 +1,6 @@
 import streamlit as st
 from langchain_nvidia_ai_endpoints import NVIDIAEmbeddings, ChatNVIDIA
-import os 
-from dotenv import load_dotenv
+import os
 from langchain_community.document_loaders import PyPDFDirectoryLoader, PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.chains.combine_documents import create_stuff_documents_chain
@@ -10,12 +9,7 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain.chains import create_retrieval_chain
 from langchain_community.vectorstores import FAISS
 import time
-
-load_dotenv()
-
 ## load the nvidia api key
-os.environ["NVIDIA_API_KEY"] = os.getenv("NVIDIA_API_KEY")
-
 api_key = st.sidebar.text_input("Enter your NVIDIA API Key", type="password")
 
 llm = ChatNVIDIA(model = "meta/llama3-70b-instruct", nvidia_api_key=api_key)
@@ -24,19 +18,13 @@ def vector_embeddings(uploaded_files):
     if "vectors" not in st.session_state:
         st.session_state.embeddings = NVIDIAEmbeddings()
         st.session_state.docs = []
-        # st.session_state.loader = PyPDFDirectoryLoader("./us_census")
-        # Load all uploaded PDF files
         for uploaded_file in uploaded_files:
             # Save the uploaded file temporarily
             with open(os.path.join("temp", uploaded_file.name), "wb") as f:
                 f.write(uploaded_file.read())
-            
-            # Use the saved file path for PyPDFLoader
             file_path = os.path.join("temp", uploaded_file.name)
             st.session_state.loader = PyPDFLoader(file_path)
             st.session_state.docs.extend(st.session_state.loader.load())
-        # st.session_state.loader = PyPDFLoader(uploaded_file)
-        # st.session_state.docs = st.session_state.loader.load()
         st.session_state.text_splitter = RecursiveCharacterTextSplitter(chunk_size=700, chunk_overlap=50)
         st.session_state.final_documents=st.session_state.text_splitter.split_documents(st.session_state.docs[:30])
         st.session_state.vectors=FAISS.from_documents(st.session_state.final_documents, st.session_state.embeddings)
