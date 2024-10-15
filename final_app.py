@@ -12,7 +12,7 @@ import time
 ## load the nvidia api key
 api_key = st.sidebar.text_input("Enter your NVIDIA API Key", type="password")
 
-llm = ChatNVIDIA(model = "meta/llama3-70b-instruct", nvidia_api_key=api_key)
+llm = ChatNVIDIA(model = "meta/llama3-70b-instruct", api_key=api_key)
 
 def vector_embeddings(uploaded_files):
     if "vectors" not in st.session_state:
